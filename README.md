@@ -49,15 +49,15 @@ This is a simple and elegant developer portfolio template designed to showcase y
 
 3. Customize the content in `pages/index.tsx` and `styles/globals.css` to fit your needs.
 
-4. Modify the portfolio section in `pages/index.tsx` to showcase your projects.
+4. Modify the portfolio section in `app/page.tsx` to showcase your projects.
 
-5. Update the contact form (`components/ContactForm.tsx`) to receive inquiries directly to your email.
+5. Update the contact form (`app/_components/contact.tsx`) to receive inquiries directly to your email.
 
 6. Customize the styling in `tailwind.config.js` to match your personal brand or preferences.
 
 ## Acknowledgments
 
-- **Icons**: Lucide Icons, FontAwesome.
+- **Icons**: Lucide Icons.
 - **Dependencies**: Check `package.json` for a full list of dependencies used.
 
 ## Feedback and Contributions
