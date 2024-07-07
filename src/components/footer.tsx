@@ -67,7 +67,7 @@ export const Footer = () => (
               key={column.title}
               className='mt-10 min-w-[50%] lg:mt-0 lg:min-w-[18rem]'
             >
-              <h3 className='mb-3 font-medium'>{column.title}</h3>
+              <p className='mb-3 font-medium'>{column.title}</p>
               <ul>
                 {column.links.map((link) => (
                   <li key={link.title} className='[&_a]:last:mb-0'>

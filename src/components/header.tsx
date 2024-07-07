@@ -36,6 +36,7 @@ export const Header = () => {
           className='flex items-center text-nowrap text-lg mr-10 text-[#c178f1]'
           href='/'
           onClick={() => setHamburgerMenuIsOpen(false)}
+          aria-label='Go to home'
         >
           <Logo />
         </Link>

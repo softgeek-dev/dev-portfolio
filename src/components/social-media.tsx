@@ -1,4 +1,5 @@
 import { Github, Linkedin, Twitter, Youtube } from 'lucide-react'
+import Link from 'next/link'
 
 export const SocialMedia = () => {
   const socialMediaLinks = [
@@ -20,33 +21,34 @@ export const SocialMedia = () => {
     },
   ]
   return (
-    <div className="flex justify-center md:justify-start translate-y-[-1rem] animate-fade-in opacity-0 [--animation-delay:200ms]">
-      <div className="flex justify-between">
-        <div className="mt-auto flex space-x-4 text-grey">
+    <div className='flex justify-center md:justify-start translate-y-[-1rem] animate-fade-in opacity-0 [--animation-delay:200ms]'>
+      <div className='flex justify-between'>
+        <div className='mt-auto flex space-x-4 text-grey'>
           {socialMediaLinks.map((link) => (
             <div
               key={link.title}
-              className="p-1 bg-transparent hover:shadow-primary transition-[shadow,text-shadow]"
+              className='p-1 bg-transparent hover:shadow-primary transition-[shadow,text-shadow]'
             >
-              <a
+              <Link
                 href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-4 h-4 cursor-pointer hover:text-primary-text"
+                target='_blank'
+                rel='noopener noreferrer'
+                className='w-4 h-4 cursor-pointer hover:text-primary-text'
+                aria-label={link.title}
               >
                 {link.title === 'Youtube' ? (
                   <Youtube
-                    role="button"
-                    className="w-4 h-4 hover:animate-bounce"
+                    role='button'
+                    className='w-4 h-4 hover:animate-bounce'
                   />
                 ) : link.title === 'Twitter' ? (
-                  <Twitter role="button" className="w-4 h-4" />
+                  <Twitter role='button' className='w-4 h-4' />
                 ) : link.title === 'Github' ? (
-                  <Github role="button" className="w-4 h-4" />
+                  <Github role='button' className='w-4 h-4' />
                 ) : (
-                  <Linkedin role="button" className="w-4 h-4" />
+                  <Linkedin role='button' className='w-4 h-4' />
                 )}
-              </a>
+              </Link>
             </div>
           ))}
         </div>
