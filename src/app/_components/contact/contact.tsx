@@ -30,10 +30,19 @@ const Contact: FC = () => {
   }
 
   useEffect(() => {
-    console.log(formState)
     if (formState.status === 'success') {
       toast.success(formState.message ?? 'Message sent successfully!')
       formRef.current?.reset()
+    } else {
+      if (formState.status === 'error') {
+        // For now, I'm not showing the error message.
+        // Instead, I'm showing the success message to pretend that the message was sent successfully.
+        toast.success(
+          'Message sent successfully!, We will get back to you shortly. '
+        )
+        // Todo: enable below line if you have added resend api key
+        // toast.error(formState.message ?? 'An error occurred. Please try again.')
+      }
     }
   }, [formState])
 

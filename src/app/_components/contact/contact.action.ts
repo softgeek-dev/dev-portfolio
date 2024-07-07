@@ -3,7 +3,9 @@
 import { Resend } from 'resend'
 import * as z from 'zod'
 
-const devRam = new Resend(process.env.RESEND_API_KEY)
+const mailServer = process.env.RESEND_API_KEY
+  ? new Resend(process.env.RESEND_API_KEY)
+  : null
 
 const FormSchema = z.object({
   username: z.string().min(3, {
@@ -50,19 +52,26 @@ export async function submitFormAction(
       subject,
     })
 
-    await sendThankYouEmail(email)
-    await receiveVisitorMessage(message, email, username)
-
-    return {
-      message: `🎉 Thank you for reaching out! Your message has been successfully sent. We'll get back to you shortly. 📬`,
-      errors: undefined,
-      status: 'success',
-      fields: {
-        username: '',
-        email: '',
-        message: '',
-        subject: '',
-      },
+    const res = await sendThankYouEmail(email)
+    if (res.success) {
+      return {
+        message: `🎉 Thank you for reaching out! Your message has been successfully sent. We'll get back to you shortly. 📬`,
+        errors: undefined,
+        status: 'success',
+        fields: {
+          username: '',
+          email: '',
+          message: '',
+          subject: '',
+        },
+      }
+    } else {
+      return {
+        message: res.message,
+        status: 'error',
+        errors: undefined,
+        fields: preState,
+      }
     }
   } catch (error) {
     const zodErrors = error as z.ZodError
@@ -82,6 +91,13 @@ export async function submitFormAction(
 }
 
 export const sendThankYouEmail = async (email: string) => {
+  if (!process.env.RESEND_API_KEY) {
+    return {
+      success: false,
+      message: 'Please set the RESEND_API_KEY environment variable.',
+    }
+  }
+
   const thankYouEmailTemplate = `<!DOCTYPE html>
   <html lang="en">
   <head>
@@ -151,7 +167,7 @@ export const sendThankYouEmail = async (email: string) => {
   
   <div class="container">
     <div class="header">
-      <img src="https://firebasestorage.googleapis.com/v0/b/softgiks.appspot.com/o/article%2Fimages%2Fundefined%2F660479fa-bc31-4ef5-9160-2958faefe4a7?alt=media&token=5f3e0c13-aa76-4959-a5ad-f59a7eac84b5" alt="Your Logo" class="logo">
+      Your Logo Here...
     </div>
     <div class="content">
       <h1>Thank You for Your Message!</h1>
@@ -159,47 +175,35 @@ export const sendThankYouEmail = async (email: string) => {
       <span class="from">Sincerely,<br>The Team at <b>DevRam</b></span>
     </div>
     <div class="footer">
-      <p>Our website: <a href="your_website_url.com">devram.in</a></p>
+      <p>Our website: <a href="devram.in">devram.in</a></p>
         <span>Email: <a href="mailto:support@devram.in">support@devram.in</a></span> | 
-      <span>Phone: +91 <a href="tel:9975474840">9975474840</a></span>
+      <span>Phone: +91 <a href="tel:99xxxxxxxx">99xxxxxxxx</a></span>
     </div>
   </div>
   
   </body>
   </html>  
 `
-  const { data, error } = await devRam.emails.send({
-    from: 'DevRam <support@devram.in>',
-    to: email,
-    subject: 'Glad to hear from you!',
-    html: thankYouEmailTemplate,
-  })
-  console.log(
-    '🚀 ~ file: contact.action.ts:89 ~ sendThankYouEmail ~ data, error:',
-    data,
-    error
-  )
-}
-
-export const receiveVisitorMessage = async (
-  message: string,
-  email: string,
-  name: string
-) => {
-  const { data, error } = await devRam.emails.send({
-    from: `${name} <support@devram.in>`,
-    to: ['support@devram.in', 'softgeek.dev@gmail.com'],
-    subject: 'Get In Touch',
-    html: `<div>
-    <p>Visitor Email: ${email}</p>
-    <hr/>
-    <p>Visitor Message:</p>
-    <p>${message}</p>
-    </div>`,
-  })
-  console.log(
-    '🚀 ~ file: contact.action.ts:89 ~ sendThankYouEmail ~ data, error:',
-    data,
-    error
-  )
+  try {
+    if (!mailServer) {
+      throw new Error('Please set the RESEND_API_KEY environment variable.')
+    }
+    await mailServer.emails.send({
+      from: 'DevRam <from-email-goes-here>',
+      to: email,
+      subject: 'Glad to hear from you!',
+      html: thankYouEmailTemplate,
+    })
+    return {
+      success: true,
+      message:
+        'Thank you email sent successfully. We will get back to you soon.',
+    }
+  } catch (error) {
+    console.log('Error while sending thank you email', error)
+    return {
+      success: false,
+      message: 'Error while sending email. Please try again.',
+    }
+  }
 }
