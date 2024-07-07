@@ -47,7 +47,7 @@ This is a simple and elegant developer portfolio template designed to showcase y
    yarn install
    ```
 
-3. Customize the content in `pages/index.tsx` and `styles/globals.css` to fit your needs.
+3. Customize the content in `app/_components` and `app/globals.css` to fit your needs.
 
 4. Modify the portfolio section in `app/page.tsx` to showcase your projects.
 
